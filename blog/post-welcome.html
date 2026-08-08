@@ -1,0 +1,45 @@
+---
+layout: default
+---
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>我的第一个作品集博客上线啦 · 小小崔</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}" />
+</head>
+<body>
+
+  <header id="site-nav"></header>
+
+  <main>
+    <article class="article">
+      <a class="back" href="{{ '/blog.html' | relative_url }}">← 返回博客</a>
+      <h1>我的第一个作品集博客上线啦</h1>
+      <div class="post-meta">2026-08-06 · #随笔</div>
+      <div class="post-body">
+        <p>一直想有个属于自己的小角落，不依赖任何平台，想写什么就写什么。今天它终于搭好了——纯静态 HTML，双击就能打开，以后也能直接丢到 GitHub Pages 上。</p>
+
+        <h2>为什么不用现成的博客平台</h2>
+        <p>现成平台方便，但内容不在自己手里。我想要的是：文件就是我的文章，想搬就搬，想改就改。所以选了最朴素的方案——几张网页 + 一点 JS。</p>
+
+        <h2>它是怎么搭出来的</h2>
+        <p>其实不难：一个首页，几个板块页面（作品、信奥、自媒体、博客），再加一个数据文件。以后加新作品，只要在数据里加一行；写新文章，复制一个模板页填好就行。</p>
+
+        <blockquote>做一个属于自己的东西，比用一百个别人的东西都开心。</blockquote>
+
+        <p>接下来我会把做过的 App、刷过的题、还有折腾的过程一点点放进来。欢迎常来逛逛～</p>
+      </div>
+    </article>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="{{ '/js/data.js' | relative_url }}"></script>
+  <script src="{{ '/js/main.js' | relative_url }}"></script>
+</body>
+</html>
