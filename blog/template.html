@@ -1,0 +1,43 @@
+---
+layout: default
+---
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>文章标题 · 小小崔</title>
+  <meta name="description" content="文章摘要，150 字以内。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}" />
+</head>
+<body>
+
+  <header id="site-nav"></header>
+
+  <main>
+    <article class="section wrap">
+      <header style="margin-bottom:32px;">
+        <h1 style="font-family:var(--serif); font-size:1.8rem; color:var(--ink);">文章标题</h1>
+        <time style="font-size:.85rem; color:var(--ink-muted);">2026-08-08</time>
+      </header>
+
+      <div style="max-width:680px; font-size:.95rem; line-height:1.85; color:var(--ink-light);">
+        <p>在这里写正文……</p>
+        <p>支持多段落。</p>
+      </div>
+
+      <footer style="margin-top:40px; padding-top:20px; border-top:1px solid var(--card-border);">
+        <a href="{{ '/blog.html' | relative_url }}" style="font-size:.88rem;">← 返回博客列表</a>
+      </footer>
+    </article>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="{{ '/js/data.js' | relative_url }}"></script>
+  <script src="{{ '/js/main.js' | relative_url }}"></script>
+</body>
+</html>
