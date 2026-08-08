@@ -1,0 +1,48 @@
+---
+layout: default
+---
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>用 vibe coding 做我的第一个 App · 小小崔</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}" />
+</head>
+<body>
+
+  <header id="site-nav"></header>
+
+  <main>
+    <article class="article">
+      <a class="back" href="{{ '/blog.html' | relative_url }}">← 返回博客</a>
+      <h1>用 vibe coding 做我的第一个 App</h1>
+      <div class="post-meta">2026-07-20 · #开发</div>
+      <div class="post-body">
+        <p>vibe coding 的意思是：你负责想清楚要什么，AI 帮你把代码写出来。这个暑假，我用它做出了自己的第一个能用的 App——VIP续费提醒。</p>
+
+        <h2>从一句话开始</h2>
+        <p>我给 AI 说的第一句话是："做一个单机版、不联网、能提醒 VIP 续费日期的小工具。"它很快就给了我能跑的框架。接下来就是一遍遍告诉它"这里要改""那里加上"。</p>
+
+        <h2>我学到的几件事</h2>
+        <p>第一，<strong>描述得越清楚，结果越好</strong>。含糊的指令只会得到含糊的代码。第二，<strong>要自己看懂关键逻辑</strong>，不能完全当甩手掌柜，否则出了 bug 修不动。第三，<strong>先跑起来再追求完美</strong>。</p>
+
+        <pre><code>// 一个小例子：到点提醒
+if (today >= renewDate - 3) {
+  showReminder("还有 3 天续费哦～");
+}</code></pre>
+
+        <p>现在它已经能在应用商店下载了。虽然只是个小小的工具，但它是我亲手"指挥"出来的第一个作品，意义不一样。</p>
+      </div>
+    </article>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="{{ '/js/data.js' | relative_url }}"></script>
+  <script src="{{ '/js/main.js' | relative_url }}"></script>
+</body>
+</html>
