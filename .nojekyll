@@ -1,0 +1,2 @@
+# 这个文件告诉 GitHub Pages：不要启用 Jekyll，把本仓库当纯静态文件发布。
+# （没有它，GitHub 会尝试用 Jekyll 处理，可能导致某些文件被忽略。）

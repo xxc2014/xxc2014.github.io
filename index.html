@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>小小崔 · 作品集与博客</title>
+  <meta name="description" content="12 岁独立开发者小小崔的作品集与个人博客：编程作品、信奥经历、自媒体内容。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header id="site-nav"></header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero wrap">
+      <div class="avatar">🌙</div>
+      <h1>你好，我是小小崔</h1>
+      <p class="tagline" id="tagline">12 岁 · 独立开发者 · 信奥选手 · 自媒体</p>
+      <p class="bio" id="bio">这里是我的小角落，放我做的东西、写的字，还有折腾代码的过程。</p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href="works.html">看看我的作品 →</a>
+        <a class="btn btn-ghost" href="blog.html">读读我的博客</a>
+      </div>
+    </section>
+
+    <!-- 作品预览 -->
+    <section class="section wrap">
+      <div class="section-head">
+        <div>
+          <h2>最近的作品</h2>
+          <div class="sub">我做的小工具与 App</div>
+        </div>
+        <a class="more-link" href="works.html">全部作品 →</a>
+      </div>
+      <div id="works-list"></div>
+    </section>
+
+    <!-- 信奥 + 自媒体 两栏 -->
+    <section class="section wrap">
+      <div class="section-head">
+        <div><h2>信奥 & 自媒体</h2><div class="sub">赛场内外，都在折腾</div></div>
+      </div>
+      <div class="grid" style="grid-template-columns: 1fr 1fr; align-items:start;">
+        <div>
+          <h3 style="font-family:var(--serif); margin:0 0 14px; color:var(--ink)">🏆 信奥之路</h3>
+          <div id="oi-list"></div>
+          <a class="more-link" href="oi.html">完整经历 →</a>
+        </div>
+        <div>
+          <h3 style="font-family:var(--serif); margin:0 0 14px; color:var(--ink)">📡 我在这些平台</h3>
+          <div id="media-list" class="grid" style="grid-template-columns:1fr;"></div>
+          <a class="more-link" href="media.html">全部账号 →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 博客预览 -->
+    <section class="section wrap">
+      <div class="section-head">
+        <div><h2>最新博客</h2><div class="sub">随手记下的想法与过程</div></div>
+        <a class="more-link" href="blog.html">全部文章 →</a>
+      </div>
+      <div id="posts-list"></div>
+    </section>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    /* 用 data.js 里的信息填 Hero（不改这里也行） */
+    if (window.SITE) {
+      if (SITE.tagline) document.getElementById("tagline").textContent = SITE.tagline;
+      if (SITE.bio) document.getElementById("bio").textContent = SITE.bio;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+# 不传到 GitHub 的内容
+.workbuddy/
+
+# 系统/编辑器文件
+.DS_Store
+Thumbs.db
+*.log
