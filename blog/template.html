@@ -7,7 +7,6 @@ layout: default
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>文章标题 · 小小崔</title>
-  <meta name="description" content="文章摘要，150 字以内。" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet" />
@@ -18,20 +17,23 @@ layout: default
   <header id="site-nav"></header>
 
   <main>
-    <article class="section wrap">
-      <header style="margin-bottom:32px;">
-        <h1 style="font-family:var(--serif); font-size:1.8rem; color:var(--ink);">文章标题</h1>
-        <time style="font-size:.85rem; color:var(--ink-muted);">2026-08-08</time>
-      </header>
+    <article class="article">
+      <a class="back" href="{{ '/blog.html' | relative_url }}">← 返回博客</a>
+      <h1>这里写文章标题</h1>
+      <div class="post-meta">YYYY-MM-DD · #标签</div>
+      <div class="post-body">
+        <p>这里写开头段落。复制这个模板，把标题、日期、标签和正文换成你自己的内容。</p>
 
-      <div style="max-width:680px; font-size:.95rem; line-height:1.85; color:var(--ink-light);">
-        <p>在这里写正文……</p>
-        <p>支持多段落。</p>
+        <h2>小标题用 h2</h2>
+        <p>正文段落用 p 标签。要加代码可以像下面这样：</p>
+
+        <pre><code>// 代码块示例
+console.log("你好，世界");</code></pre>
+
+        <blockquote>引用句话可以用 blockquote。</blockquote>
+
+        <p>写完别忘了去 <code>js/data.js</code> 的 <code>POSTS</code> 数组里加一条，博客列表才会出现它。</p>
       </div>
-
-      <footer style="margin-top:40px; padding-top:20px; border-top:1px solid var(--card-border);">
-        <a href="{{ '/blog.html' | relative_url }}" style="font-size:.88rem;">← 返回博客列表</a>
-      </footer>
     </article>
   </main>
 
