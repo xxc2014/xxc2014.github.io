@@ -1,3 +1,6 @@
+---
+layout: default
+---
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -8,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}" />
 </head>
 <body>
 
@@ -32,7 +35,7 @@
 
   <footer id="site-footer"></footer>
 
-  <script src="js/data.js"></script>
-  <script src="js/main.js"></script>
+  <script src="{{ '/js/data.js' | relative_url }}"></script>
+  <script src="{{ '/js/main.js' | relative_url }}"></script>
 </body>
 </html>
