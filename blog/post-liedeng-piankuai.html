@@ -1,0 +1,77 @@
+---
+layout: default
+---
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>《裂隙拼块：边界迷途》PC端Python游戏开发记录 · 小小崔</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}" />
+</head>
+<body>
+
+  <header id="site-nav"></header>
+
+  <main>
+    <article class="article">
+      <a class="back" href="{{ '/blog.html' | relative_url }}">← 返回博客</a>
+      <h1>《裂隙拼块：边界迷途》PC端Python游戏开发记录</h1>
+      <div class="post-meta">2026-08-04 · #开发日志</div>
+      <div class="post-body">
+
+        <h2>1. 项目基础说明</h2>
+        <p>我用纯 Python 搭配游戏库做的 PC 解谜沙盒游戏，目标是参赛腾讯游戏创作大赛，全程独立开发，全程用 GitHub 管理所有代码文件。不用大型商用游戏引擎，完全手写底层逻辑代码，最终可以打包成 exe 直接在电脑运行。</p>
+
+        <h2>2. 整体文件结构拆分</h2>
+        <p>全局总控分层写好了对应 py 文件，分工清晰：</p>
+        <ul>
+          <li>主启动文件、场景加载文件、12 块地形碎片逻辑文件</li>
+          <li>光路解谜模块、拖拽物理模块、UI 界面文件</li>
+        </ul>
+        <p>所有文件分开管理，不会出现代码堆在一个文档里乱糟糟的情况，维护、改 bug 效率高。仓库分两条分支，main 主线只放稳定正式代码，preview 测试分支用来提交新功能 PR 预览版。所有新增内容先丢进 PR 分支自测，无崩溃、逻辑无漏洞之后，再合并到主线，保证主线随时能正常运行。</p>
+
+        <h2>3. 当前开发进度</h2>
+        <p>整体进度刚好过半，离谱的是写代码写了大半，才敲定游戏名称《裂隙拼块：边界迷途》。基础拖拽、光路折射解谜核心机制全部调试完成，基础场景框架搭建完毕，埋入不少日常向趣味彩蛋。暂时没有做精致美术资源，现阶段优先保证玩法逻辑通顺，后续再迭代美化界面。</p>
+
+        <h2>4. 开发工具与版本管理规范</h2>
+        <p>核心开发语言 Python，WorkBuddy 辅助调试代码逻辑；日常文档、需求规划用飞书语音输入快速记录，手机在外也能随时补写开发笔记；版本控制依靠 GitHub，所有新功能、改动统一提交 PR 至 preview 预览分支，预留一段时间完整自测，测试无重大问题后再合并至 main 主线；每次大版本迭代同步更新本篇开发日志博客，记录踩坑复盘与优化思路。</p>
+
+        <h2>5. 后续更新规划 & 更新频率</h2>
+
+        <h3>短期（1～2 周）</h3>
+        <ol>
+          <li>补全剩余代码逻辑，修复现有物理卡顿、判定 bug</li>
+          <li>优化 UI 画面显示效果，统一界面字体与配色</li>
+          <li>完善项目 README，附上环境配置、一键运行教程</li>
+          <li>清理项目冗余缓存文件，打包轻量化可执行程序</li>
+        </ol>
+
+        <h3>长期（1-2 个月）</h3>
+        <ol>
+          <li>持续优化底层物理引擎，降低设备运行负载，低配电脑也能流畅运行</li>
+          <li>扩充完整游戏内容，丰富交互细节与隐藏彩蛋</li>
+          <li>持续更新开发复盘文档，同步更新博客记录学习心得</li>
+        </ol>
+
+        <h3>更新节奏</h3>
+        <ol>
+          <li>小型 bug 修复、文本优化：3 天一次小更新，推送至 preview 预览分支</li>
+          <li>新增功能、大规模优化：每两周一次大版本迭代，全量测试稳定后合并主线</li>
+          <li>仓库文档、开发博客随主线版本同步更新</li>
+          <li>若遇到实训、外出行程，会提前在仓库说明临时暂停更新</li>
+        </ol>
+
+      </div>
+    </article>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="{{ '/js/data.js' | relative_url }}"></script>
+  <script src="{{ '/js/main.js' | relative_url }}"></script>
+</body>
+</html>
