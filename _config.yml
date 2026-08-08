@@ -1,0 +1,20 @@
+# Jekyll 配置文件
+# 小小崔 · 作品集与博客
+
+title: 小小崔 · 作品集与博客
+description: 12 岁独立开发者小小崔的作品集与个人博客
+author: 小小崔
+lang: zh-CN
+
+# 因为是用户/组织站点 (xxc2014.github.io)，baseurl 留空
+baseurl: ""
+url: "https://xxc2014.github.io"
+
+# 构建设置
+markdown: kramdown
+plugins: []
+
+exclude:
+  - README.md
+  - LICENSE
+  - .gitignore
