@@ -69,6 +69,13 @@ const MEDIA = [
 /* 博客文章（blog.html 列表；每篇是 blog/ 下的独立 HTML） */
 const POSTS = [
   {
+    title: "8 月第三周周报",
+    date: "2026-08-16",
+    tag: "周报",
+    excerpt: "本周完成新游戏立项、主体架构与提示词编写，社群答疑拿到实际奖励，大师课按时完成；下周重点推进游戏开发和申报材料。",
+    url: "blog/post-weekly-2026-08-16.html"
+  },
+  {
     title: "我的第一个作品集博客上线啦",
     date: "2026-08-06",
     tag: "随笔",
