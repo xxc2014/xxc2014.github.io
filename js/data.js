@@ -69,6 +69,13 @@ const MEDIA = [
 /* 博客文章（blog.html 列表；每篇是 blog/ 下的独立 HTML） */
 const POSTS = [
   {
+    title: "8 月第四周周报",
+    date: "2026-08-23",
+    tag: "周报",
+    excerpt: "本周重点完善《裂隙拼块：边界迷途》的 Bug，版本更稳但功能迭代放缓；社群保持活跃但多为围观、收获有限；新发现 ShipIt Hackathon 正在准备参赛。",
+    url: "blog/post-weekly-2026-08-23.html"
+  },
+  {
     title: "8 月第三周周报",
     date: "2026-08-16",
     tag: "周报",
