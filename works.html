@@ -6,8 +6,8 @@ layout: default
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>作品 · 小小崔</title>
-  <meta name="description" content="小小崔做的编程作品：App、网页小工具与开发练习。" />
+  <title>作品集 · 小小崔</title>
+  <meta name="description" content="小小崔的作品集：独立开发的小工具、App 与游戏。" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet" />
@@ -18,16 +18,56 @@ layout: default
   <header id="site-nav"></header>
 
   <main>
+    <!-- 作品集 Hero -->
+    <section class="pf-hero wrap">
+      <h1>我的作品集</h1>
+      <p class="pf-sub">从练习到上架，一个个亲手做出来。下面是挑选过的项目。</p>
+      <div class="pf-stats" id="pf-stats"></div>
+    </section>
+
+    <!-- 技术栈 -->
+    <section class="section-sm wrap">
+      <div class="section-head">
+        <div>
+          <h2>技术栈</h2>
+          <div class="sub">做这些项目用到的东西</div>
+        </div>
+      </div>
+      <div class="pf-skills" id="pf-skills"></div>
+    </section>
+
+    <!-- 精选项目 -->
+    <section class="section wrap" id="pf-featured-wrap" hidden>
+      <div class="section-head">
+        <div>
+          <h2>精选项目</h2>
+          <div class="sub">最值得看的那个</div>
+        </div>
+      </div>
+      <div id="pf-featured"></div>
+    </section>
+
+    <!-- 全部项目 -->
     <section class="section wrap">
       <div class="section-head">
         <div>
-          <h2>我的作品</h2>
-          <div class="sub">从练习到上架，一个个做出来</div>
+          <h2>全部项目</h2>
+          <div class="sub">点开卡片看详情</div>
         </div>
       </div>
-      <div id="works-list"></div>
+      <div class="pf-filter" id="pf-filter"></div>
+      <div class="pf-grid" id="works-list"></div>
     </section>
   </main>
+
+  <!-- 详情弹窗 -->
+  <div class="pf-modal" id="pf-modal" role="dialog" aria-modal="true" hidden>
+    <div class="pf-modal-backdrop" data-close></div>
+    <div class="pf-modal-panel">
+      <button class="pf-modal-close" data-close aria-label="关闭">×</button>
+      <div id="pf-modal-body"></div>
+    </div>
+  </div>
 
   <footer id="site-footer"></footer>
 

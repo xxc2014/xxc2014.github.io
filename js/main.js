@@ -64,25 +64,182 @@
       "</div>";
   }
 
-  /* 作品卡片 */
+  /* ---------- 作品集工具函数 ---------- */
+
+  /* 去重 */
+  function uniq(arr) {
+    return arr.filter(function (v, i) { return arr.indexOf(v) === i; });
+  }
+
+  /* 汇总所有作品用到的技术关键词（去重） */
+  function collectSkills() {
+    var list = [];
+    WORKS.forEach(function (w) {
+      (w.stack || []).forEach(function (s) { if (list.indexOf(s) < 0) list.push(s); });
+    });
+    return list;
+  }
+
+  /* 外部链接按钮 */
+  function workLinks(w) {
+    var l = w.links || {};
+    var out = "";
+    if (l.demo) out += '<a class="pf-ext" href="' + l.demo + '" target="_blank" rel="noopener">演示</a>';
+    if (l.github) out += '<a class="pf-ext" href="' + l.github + '" target="_blank" rel="noopener">GitHub</a>';
+    if (l.blog) out += '<a class="pf-ext" href="' + l.blog + '">博客</a>';
+    return out;
+  }
+
+  /* 标签列表 */
+  function tagList(tags) {
+    return '<div class="tags">' + (tags || []).map(function (t) { return '<span class="tag">' + t + "</span>"; }).join("") + "</div>";
+  }
+
+  /* 单张作品卡片 */
+  function workCard(w, i) {
+    var meta = [w.year, w.status].filter(Boolean).join(" · ");
+    var links = workLinks(w);
+    return (
+      '<article class="pf-card" data-cat="' + w.cat + '" data-index="' + i + '">' +
+        '<div class="pf-thumb">' + (w.icon || "✨") + (w.featured ? '<span class="pf-flag">精选</span>' : "") + "</div>" +
+        '<div class="pf-body">' +
+          '<div class="pf-top"><span class="pf-cat">' + w.cat + "</span>" + (meta ? '<span class="pf-meta">' + meta + "</span>" : "") + "</div>" +
+          "<h3>" + w.title + "</h3>" +
+          "<p>" + w.desc + "</p>" +
+          tagList(w.tags) +
+          '<div class="pf-actions">' +
+            '<span class="pf-open" data-open="' + i + '">查看详情 →</span>' +
+            (links ? '<span class="pf-links">' + links + "</span>" : "") +
+          "</div>" +
+        "</div>" +
+      "</article>"
+    );
+  }
+
+  /* 作品卡片（works.html + index 预览共用） */
   function renderWorks() {
     var box = document.getElementById("works-list");
     if (!box) return;
-    box.className = "grid";
-    box.innerHTML = WORKS.map(function (w) {
-      return (
-        '<article class="card">' +
-          '<div class="thumb">' + (w.icon || "✨") + "</div>" +
-          '<div class="body">' +
-            '<div class="cat">' + w.cat + "</div>" +
-            "<h3>" + w.title + "</h3>" +
-            "<p>" + w.desc + "</p>" +
-            '<div class="tags">' + (w.tags || []).map(function (t) { return '<span class="tag">' + t + "</span>"; }).join("") + "</div>" +
-            (w.link && w.link !== "#" ? '<a class="card-link" href="' + w.link + '" target="_blank" rel="noopener">查看 / 下载 →</a>' : '<span class="card-link">详情整理中</span>') +
-          "</div>" +
-        "</article>"
-      );
+    box.className = "pf-grid";
+    box.innerHTML = WORKS.map(workCard).join("");
+  }
+
+  /* ---------- 作品集专属（仅在对应容器存在时生效） ---------- */
+
+  /* 顶部统计 */
+  function renderStats() {
+    var box = document.getElementById("pf-stats");
+    if (!box) return;
+    var cats = uniq(WORKS.map(function (w) { return w.cat; }));
+    var skills = collectSkills();
+    box.innerHTML =
+      '<div class="pf-stat"><b>' + WORKS.length + "</b><span>项目</span></div>" +
+      '<div class="pf-stat"><b>' + cats.length + "</b><span>分类</span></div>" +
+      '<div class="pf-stat"><b>' + skills.length + "</b><span>技术点</span></div>";
+  }
+
+  /* 技术栈 */
+  function renderSkills() {
+    var box = document.getElementById("pf-skills");
+    if (!box) return;
+    var skills = collectSkills();
+    if (!skills.length) {
+      box.innerHTML = '<span class="pf-empty">整理中…</span>';
+      return;
+    }
+    box.innerHTML = skills.map(function (s) { return '<span class="pf-skill">' + s + "</span>"; }).join("");
+  }
+
+  /* 精选项目 */
+  function renderFeatured() {
+    var box = document.getElementById("pf-featured");
+    var wrap = document.getElementById("pf-featured-wrap");
+    if (!box) return;
+    var f = WORKS.filter(function (w) { return w.featured; })[0];
+    if (!f) { if (wrap) wrap.hidden = true; return; }
+    if (wrap) wrap.hidden = false;
+    var links = workLinks(f);
+    box.innerHTML =
+      '<article class="pf-feature">' +
+        '<div class="pf-feature-icon">' + (f.icon || "✨") + "</div>" +
+        '<div class="pf-feature-body">' +
+          '<div class="pf-top"><span class="pf-cat">' + f.cat + '</span><span class="pf-meta">' + f.year + " · " + f.status + "</span></div>" +
+          "<h3>" + f.title + "</h3>" +
+          "<p>" + (f.longDesc || f.desc) + "</p>" +
+          tagList(f.tags) +
+          (links ? '<div class="pf-actions" style="margin-top:16px;"><span class="pf-links">' + links + "</span></div>" : "") +
+        "</div>" +
+      "</article>";
+  }
+
+  /* 分类筛选 */
+  function renderFilter() {
+    var box = document.getElementById("pf-filter");
+    if (!box) return;
+    var cats = ["全部"].concat(uniq(WORKS.map(function (w) { return w.cat; })));
+    box.innerHTML = cats.map(function (c, i) {
+      return '<button class="pf-chip' + (i === 0 ? " active" : "") + '" data-cat="' + c + '">' + c + "</button>";
     }).join("");
+    box.querySelectorAll(".pf-chip").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        box.querySelectorAll(".pf-chip").forEach(function (b) { b.classList.remove("active"); });
+        btn.classList.add("active");
+        var cat = btn.getAttribute("data-cat");
+        document.querySelectorAll("#works-list .pf-card").forEach(function (card) {
+          card.style.display = (cat === "全部" || card.getAttribute("data-cat") === cat) ? "" : "none";
+        });
+      });
+    });
+  }
+
+  /* 详情弹窗 */
+  function openDetail(i) {
+    var modal = document.getElementById("pf-modal");
+    var body = document.getElementById("pf-modal-body");
+    var w = WORKS[i];
+    if (!modal || !body || !w) return;
+    var links = workLinks(w);
+    body.innerHTML =
+      '<div class="pf-modal-head">' +
+        '<div class="pf-modal-icon">' + (w.icon || "✨") + "</div>" +
+        '<div class="pf-modal-title">' +
+          '<div class="pf-top"><span class="pf-cat">' + w.cat + "</span>" + (w.year ? '<span class="pf-meta">' + w.year + " · " + w.status + "</span>" : "") + "</div>" +
+          "<h3>" + w.title + "</h3>" +
+        "</div>" +
+      "</div>" +
+      '<p class="pf-modal-desc">' + (w.longDesc || w.desc) + "</p>" +
+      '<div class="pf-modal-sec"><h4>技术 / 标签</h4>' + tagList(w.tags) + "</div>" +
+      (links ? '<div class="pf-modal-sec"><h4>了解更多</h4><div class="pf-links">' + links + "</div></div>" : "");
+    modal.hidden = false;
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeDetail() {
+    var modal = document.getElementById("pf-modal");
+    if (!modal) return;
+    modal.hidden = true;
+    document.body.style.overflow = "";
+  }
+
+  /* 绑定点击事件 */
+  function bindWorkClicks() {
+    var modal = document.getElementById("pf-modal");
+    document.querySelectorAll("[data-open]").forEach(function (el) {
+      el.addEventListener("click", function () {
+        if (modal) {
+          openDetail(parseInt(this.getAttribute("data-open"), 10));
+        } else {
+          location.href = prefix() + "works.html";
+        }
+      });
+    });
+    if (!modal) return;
+    document.querySelectorAll("#pf-modal [data-close]").forEach(function (el) {
+      el.addEventListener("click", closeDetail);
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") closeDetail();
+    });
   }
 
   /* 信奥时间线 */
@@ -148,8 +305,13 @@
     renderNav();
     renderFooter();
     renderWorks();
+    renderStats();
+    renderSkills();
+    renderFeatured();
+    renderFilter();
     renderOI();
     renderMedia();
     renderPosts();
+    bindWorkClicks();
   });
 })();

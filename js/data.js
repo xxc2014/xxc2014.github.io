@@ -13,31 +13,46 @@ const SITE = {
   email: "chy20140718@163.com"             // 已填；页脚暂不公开显示（"不打开"）
 };
 
-/* 编程作品（works.html 展示） */
+/* 编程作品（works.html 作品集展示） */
 const WORKS = [
+  {
+    title: "《裂隙拼块：边界迷途》",
+    cat: "Python 游戏",
+    year: "2026",
+    status: "参赛中",
+    icon: "🎮",
+    desc: "纯 Python 开发的 PC 端解谜沙盒游戏，可打包成 exe 直接运行，正在参加腾讯游戏创作大赛。",
+    longDesc: "独立开发的纯 Python 解谜沙盒游戏，参加腾讯游戏创作大赛。项目采用文件分层组织、双分支管理，从 0 到 1 独立完成，可打包成 exe 免安装直接运行。",
+    tags: ["Python", "Pygame", "游戏"],
+    stack: ["Python", "Pygame"],
+    featured: true,
+    links: { demo: "https://b23.tv/n45jV7I", blog: "blog/post-liedeng-piankuai.html" }
+  },
   {
     title: "鸿蒙 VIP 自动续费提醒",
     cat: "鸿蒙 App",
+    year: "2026",
+    status: "已完成",
     icon: "🔔",
-    desc: "一款单机版 VIP 续费提醒工具，5 元买断，帮容易忘记续费日期的人准时提醒，不联网、不订阅。",
+    desc: "单机版 VIP 续费提醒工具，5 元买断，不联网、不订阅，帮容易忘记续费日期的人准时提醒。",
+    longDesc: "一款单机版续费提醒 App，专为容易忘记 VIP 续费日期的人设计：本地记录、定时提醒、不上传任何数据，5 元买断制。",
     tags: ["HarmonyOS", "Android", "单机"],
-    link: "#"            // ← 换成应用商店 / 下载链接
+    stack: ["HarmonyOS", "Android"],
+    featured: false,
+    links: {}
   },
   {
     title: "智能笔记",
     cat: "工具 App",
+    year: "2026",
+    status: "开发中",
     icon: "📝",
-    desc: "一个智能笔记工具，方便随手记录灵感、整理日常，把零散的想法收纳到一起。",
+    desc: "智能笔记工具，方便随手记录灵感、整理日常，把零散的想法收纳到一起。",
+    longDesc: "一款本地优先的笔记工具，用于随手记录灵感、整理日常，让零散想法有处安放。",
     tags: ["笔记", "工具", "本地"],
-    link: "#"
-  },
-  {
-    title: "《裂隙拼块：边界迷途》",
-    cat: "Python 桌面游戏",
-    icon: "🎮",
-    desc: "纯 Python 开发的 PC 端解谜沙盒游戏，参加腾讯游戏创作大赛，可打包成 exe 直接在电脑运行。B站演示：b23.tv/n45jV7I",
-    tags: ["Python", "游戏", "Pygame"],
-    link: "#"            // 暂不可点（"不打开"），B站演示见上方描述
+    stack: [],
+    featured: false,
+    links: {}
   }
 ];
 
