@@ -519,6 +519,46 @@ img { max-width: 100%; display: block; }
   background: var(--surface-2);
 }
 
+/* 通用标签行（卡片 / 精选 / 弹窗共用） */
+.tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+/* 在线演示按钮 */
+.pf-demo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 999px;
+  transition: transform .15s, box-shadow .2s, background .2s;
+}
+.pf-demo:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+  color: #fff;
+}
+
+/* 待完成卡片 */
+.wip-card {
+  opacity: .9;
+}
+.wip-card .pf-flag {
+  background: var(--muted);
+}
+.wip-card .pf-thumb {
+  background: linear-gradient(135deg, #f1ede6, #eae4da);
+  color: var(--muted);
+  font-size: 40px;
+}
+
 /* 筛选 */
 .pf-filter {
   display: flex;

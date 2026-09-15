@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>番茄专注钟 · 小小崔</title>
+<style>
+  :root {
+    --bg: #faf7f2; --surface: #fff; --ink: #2f2c28; --ink-soft: #6b6258;
+    --muted: #9a9088; --accent: #7d9b86; --accent-2: #c08552; --line: #e7e0d6; --shadow: 0 8px 30px rgba(60,50,40,.1);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: "Noto Sans SC", system-ui, "PingFang SC", "Microsoft YaHei", sans-serif;
+    -webkit-font-smoothing: antialiased; line-height: 1.6;
+    min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+  }
+  header { width: 100%; max-width: 480px; padding: 18px 20px 0; display: flex; align-items: center; gap: 12px; }
+  .back { color: var(--accent); text-decoration: none; font-size: 14px; font-weight: 500; white-space: nowrap; }
+  .back:hover { text-decoration: underline; }
+  header h1 { font-size: 20px; margin: 0; font-family: "Noto Serif SC", serif; }
+  main { width: 100%; max-width: 480px; padding: 16px 20px 40px; text-align: center; }
+
+  .tabs { display: flex; gap: 8px; justify-content: center; margin: 12px 0 22px; }
+  .tabs button {
+    border: 1px solid var(--line); background: var(--surface); color: var(--ink-soft);
+    font-size: 14px; padding: 8px 18px; border-radius: 999px; cursor: pointer; font-family: inherit;
+  }
+  .tabs button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  .ring {
+    width: min(78vw, 320px); aspect-ratio: 1; margin: 0 auto;
+    border-radius: 50%; display: grid; place-items: center;
+    background: conic-gradient(var(--accent) 0deg, #eee4da 0deg);
+    box-shadow: var(--shadow); transition: background .3s;
+    position: relative;
+  }
+  .ring::before { content: ""; position: absolute; inset: 12px; background: var(--surface); border-radius: 50%; }
+  .time { position: relative; font-size: clamp(44px, 15vw, 68px); font-weight: 700; font-variant-numeric: tabular-nums; font-family: "Noto Serif SC", serif; }
+  .phase { color: var(--muted); font-size: 14px; margin-top: 6px; }
+
+  .btns { display: flex; gap: 10px; justify-content: center; margin-top: 24px; flex-wrap: wrap; }
+  .btns button {
+    border: none; cursor: pointer; font-size: 15px; font-weight: 500; font-family: inherit;
+    padding: 12px 26px; border-radius: 999px; transition: transform .15s, box-shadow .2s;
+  }
+  .btn-main { background: var(--accent); color: #fff; }
+  .btn-ghost { background: var(--surface); color: var(--ink-soft); border: 1px solid var(--line); }
+  .btns button:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+
+  .settings { margin-top: 24px; display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+  .settings label { font-size: 13px; color: var(--muted); }
+  .settings input {
+    width: 64px; margin-left: 6px; padding: 6px 8px; font-size: 15px; text-align: center;
+    border: 1px solid var(--line); border-radius: 10px; background: var(--surface); font-family: inherit;
+  }
+</style>
+</head>
+<body>
+  <header>
+    <a class="back" href="../works.html">← 返回作品集</a>
+    <h1>番茄专注钟</h1>
+  </header>
+  <main>
+    <div class="tabs">
+      <button data-mode="work" class="active">专注</button>
+      <button data-mode="break">休息</button>
+    </div>
+    <div class="ring" id="ring"><span class="time" id="time">25:00</span></div>
+    <div class="phase" id="phase">准备开始「专注」</div>
+    <div class="btns">
+      <button class="btn-main" id="toggle">开始</button>
+      <button class="btn-ghost" id="reset">重置</button>
+    </div>
+    <div class="settings">
+      <label>专注 <input id="workMin" type="number" min="1" max="120" value="25"> 分钟</label>
+      <label>休息 <input id="breakMin" type="number" min="1" max="60" value="5"> 分钟</label>
+    </div>
+  </main>
+<script>
+(function () {
+  var mode = "work";
+  var workMin = 25, breakMin = 5;
+  var total = workMin * 60, left = total, timer = null, running = false;
+  var timeEl = document.getElementById("time"), phaseEl = document.getElementById("phase");
+  var ring = document.getElementById("ring");
+  var toggle = document.getElementById("toggle");
+
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function fmt(s) { return pad(Math.floor(s / 60)) + ":" + pad(s % 60); }
+  function render() {
+    timeEl.textContent = fmt(left);
+    var pct = total ? left / total : 0;
+    ring.style.background = "conic-gradient(" + (mode === "work" ? "var(--accent)" : "var(--accent-2)") + " " + (pct * 360) + "deg, #eee4da 0deg)";
+    phaseEl.textContent = (running ? "进行中 · " : "准备开始 · ") + (mode === "work" ? "专注" : "休息");
+    document.querySelectorAll(".tabs button").forEach(function (b) {
+      b.classList.toggle("active", b.getAttribute("data-mode") === mode);
+    });
+    toggle.textContent = running ? "暂停" : "开始";
+  }
+  function setMode(m) {
+    mode = m;
+    total = (mode === "work" ? workMin : breakMin) * 60;
+    left = total; stop(); render();
+  }
+  function readSettings() {
+    workMin = Math.max(1, parseInt(document.getElementById("workMin").value, 10) || 25);
+    breakMin = Math.max(1, parseInt(document.getElementById("breakMin").value, 10) || 5);
+  }
+  function start() {
+    readSettings();
+    if (!running) {
+      if (left <= 0) left = total;
+      running = true;
+      timer = setInterval(tick, 1000);
+    } else {
+      stop();
+    }
+    render();
+  }
+  function stop() { clearInterval(timer); timer = null; running = false; }
+  function tick() {
+    left--;
+    if (left <= 0) {
+      left = 0; render();
+      notify("时间到！" + (mode === "work" ? "该休息一下啦" : "休息结束，继续加油"));
+      mode = mode === "work" ? "break" : "work";
+      total = (mode === "work" ? workMin : breakMin) * 60;
+      left = total; stop(); render();
+      return;
+    }
+    render();
+  }
+  function notify(msg) {
+    try { document.title = "🔔 " + msg; } catch (e) {}
+    if ("Notification" in window && Notification.permission === "granted") new Notification(msg);
+    else if (typeof navigator.vibrate === "function") navigator.vibrate(300);
+    alert(msg);
+  }
+  document.querySelectorAll(".tabs button").forEach(function (b) {
+    b.addEventListener("click", function () { setMode(b.getAttribute("data-mode")); });
+  });
+  toggle.addEventListener("click", start);
+  document.getElementById("reset").addEventListener("click", function () { readSettings(); setMode(mode); });
+  document.getElementById("workMin").addEventListener("change", function () { readSettings(); if (!running) setMode(mode); });
+  document.getElementById("breakMin").addEventListener("change", function () { readSettings(); });
+  if ("Notification" in window && Notification.permission === "default") Notification.requestPermission();
+  render();
+})();
+</script>
+</body>
+</html>

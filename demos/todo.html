@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>待办清单 · 小小崔</title>
+<style>
+  :root {
+    --bg: #faf7f2; --surface: #fff; --ink: #2f2c28; --ink-soft: #6b6258;
+    --muted: #9a9088; --accent: #7d9b86; --accent-2: #c08552; --line: #e7e0d6; --shadow: 0 8px 30px rgba(60,50,40,.1);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: "Noto Sans SC", system-ui, "PingFang SC", "Microsoft YaHei", sans-serif;
+    -webkit-font-smoothing: antialiased; line-height: 1.6;
+    min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+  }
+  header { width: 100%; max-width: 560px; padding: 18px 20px 0; display: flex; align-items: center; gap: 12px; }
+  .back { color: var(--accent); text-decoration: none; font-size: 14px; font-weight: 500; white-space: nowrap; }
+  .back:hover { text-decoration: underline; }
+  header h1 { font-size: 20px; margin: 0; font-family: "Noto Serif SC", serif; }
+  main { width: 100%; max-width: 560px; padding: 16px 20px 40px; }
+
+  .add { display: flex; gap: 10px; margin: 8px 0 16px; }
+  .add input {
+    flex: 1; min-width: 0; padding: 12px 16px; font-size: 15px; font-family: inherit;
+    border: 1px solid var(--line); border-radius: 14px; background: var(--surface); color: var(--ink);
+  }
+  .add input:focus { outline: none; border-color: var(--accent); }
+  .add button {
+    border: none; cursor: pointer; background: var(--accent); color: #fff;
+    font-size: 15px; font-weight: 500; padding: 0 22px; border-radius: 14px; white-space: nowrap;
+  }
+  .add button:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+
+  .stats { display: flex; gap: 16px; color: var(--muted); font-size: 13px; margin-bottom: 10px; }
+  .stats b { color: var(--ink); }
+
+  ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  li {
+    display: flex; align-items: center; gap: 12px; background: var(--surface);
+    border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; box-shadow: var(--shadow);
+    animation: fade .2s ease;
+  }
+  @keyframes fade { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+  li .check {
+    width: 22px; height: 22px; flex: 0 0 auto; border-radius: 50%;
+    border: 2px solid var(--accent); cursor: pointer; display: grid; place-items: center;
+    color: #fff; font-size: 13px; transition: background .15s;
+  }
+  li.done .check { background: var(--accent); }
+  li .text { flex: 1; min-width: 0; font-size: 15px; word-break: break-all; }
+  li.done .text { color: var(--muted); text-decoration: line-through; }
+  li .del {
+    border: none; background: none; color: var(--muted); cursor: pointer;
+    font-size: 18px; width: 30px; height: 30px; border-radius: 8px; flex: 0 0 auto;
+  }
+  li .del:hover { background: #f3ece2; color: var(--accent-2); }
+
+  .empty { text-align: center; color: var(--muted); padding: 40px 0; }
+  .hint { text-align: center; color: var(--muted); font-size: 13px; margin-top: 18px; }
+</style>
+</head>
+<body>
+  <header>
+    <a class="back" href="../works.html">← 返回作品集</a>
+    <h1>待办清单</h1>
+  </header>
+  <main>
+    <div class="add">
+      <input id="input" type="text" maxlength="100" placeholder="记下一件要做的事…" />
+      <button id="add">添加</button>
+    </div>
+    <div class="stats">
+      <span>共 <b id="total">0</b> 件</span>
+      <span>已完成 <b id="done">0</b> 件</span>
+    </div>
+    <ul id="list"></ul>
+    <div class="empty" id="empty">还没有待办，先记一条吧～</div>
+    <p class="hint">数据存在本机浏览器里，刷新或关闭页面都不会丢</p>
+  </main>
+<script>
+(function () {
+  var KEY = "xxctodo";
+  var list = [];
+  try { list = JSON.parse(localStorage.getItem(KEY) || "[]"); } catch (e) { list = []; }
+
+  var input = document.getElementById("input");
+  var addBtn = document.getElementById("add");
+  var ul = document.getElementById("list");
+  var empty = document.getElementById("empty");
+  var totalEl = document.getElementById("total");
+  var doneEl = document.getElementById("done");
+
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(list)); } catch (e) {}
+  }
+  function render() {
+    ul.innerHTML = "";
+    if (!list.length) { empty.style.display = ""; }
+    else { empty.style.display = "none"; }
+    var doneCount = 0;
+    list.forEach(function (item, i) {
+      if (item.done) doneCount++;
+      var li = document.createElement("li");
+      li.className = item.done ? "done" : "";
+      li.innerHTML =
+        '<span class="check">' + (item.done ? "✓" : "") + "</span>" +
+        '<span class="text"></span>' +
+        '<button class="del" aria-label="删除">×</button>';
+      li.querySelector(".text").textContent = item.text;
+      li.querySelector(".check").addEventListener("click", function () {
+        item.done = !item.done; save(); render();
+      });
+      li.querySelector(".del").addEventListener("click", function () {
+        list.splice(i, 1); save(); render();
+      });
+      ul.appendChild(li);
+    });
+    totalEl.textContent = list.length;
+    doneEl.textContent = doneCount;
+  }
+  function addItem() {
+    var t = input.value.trim();
+    if (!t) { input.focus(); return; }
+    list.push({ text: t, done: false });
+    input.value = ""; save(); render(); input.focus();
+  }
+  addBtn.addEventListener("click", addItem);
+  input.addEventListener("keydown", function (e) { if (e.key === "Enter") addItem(); });
+  render();
+})();
+</script>
+</body>
+</html>

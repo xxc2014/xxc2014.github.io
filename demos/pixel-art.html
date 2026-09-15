@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>像素画板 · 小小崔</title>
+<style>
+  :root {
+    --bg: #faf7f2; --surface: #fff; --ink: #2f2c28; --ink-soft: #6b6258;
+    --muted: #9a9088; --accent: #7d9b86; --accent-2: #c08552; --line: #e7e0d6; --shadow: 0 8px 30px rgba(60,50,40,.1);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: "Noto Sans SC", system-ui, "PingFang SC", "Microsoft YaHei", sans-serif;
+    -webkit-font-smoothing: antialiased; line-height: 1.6;
+    min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+  }
+  header { width: 100%; max-width: 560px; padding: 18px 20px 0; display: flex; align-items: center; gap: 12px; }
+  .back { color: var(--accent); text-decoration: none; font-size: 14px; font-weight: 500; white-space: nowrap; }
+  .back:hover { text-decoration: underline; }
+  header h1 { font-size: 20px; margin: 0; font-family: "Noto Serif SC", serif; }
+  main { width: 100%; max-width: 560px; padding: 16px 20px 40px; }
+
+  .toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 10px 0 16px; }
+  .toolbar button {
+    border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+    font-size: 14px; padding: 8px 14px; border-radius: 999px; cursor: pointer; box-shadow: var(--shadow);
+    transition: background .15s;
+  }
+  .toolbar button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .toolbar button.active { background: var(--accent-2); color: #fff; border-color: var(--accent-2); }
+
+  .palette { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .swatch {
+    width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
+    border: 2px solid transparent; box-shadow: inset 0 0 0 1px rgba(0,0,0,.1);
+  }
+  .swatch.active { border-color: var(--ink); transform: scale(1.12); }
+
+  .grid {
+    display: grid; grid-template-columns: repeat(16, 1fr);
+    width: 100%; aspect-ratio: 1; border-radius: 12px; overflow: hidden;
+    box-shadow: var(--shadow); border: 1px solid var(--line);
+    background: #fff; touch-action: none;
+  }
+  .cell2 { border: 1px solid #f0ebe2; user-select: none; }
+  .hint { text-align: center; color: var(--muted); font-size: 13px; margin-top: 14px; }
+</style>
+</head>
+<body>
+  <header>
+    <a class="back" href="../works.html">← 返回作品集</a>
+    <h1>像素画板</h1>
+  </header>
+  <main>
+    <div class="toolbar">
+      <button id="clear">清空</button>
+      <button id="save" class="primary">保存图片</button>
+      <button id="eraser">橡皮擦</button>
+      <button id="undo">撤销</button>
+    </div>
+    <div class="palette" id="palette"></div>
+    <div class="grid" id="grid"></div>
+    <p class="hint">点一下或按住拖动上色，手机和平板也能画</p>
+  </main>
+<script>
+(function () {
+  var N = 16;
+  var colors = ["#2f2c28", "#e05656", "#f2b179", "#f5d76e", "#a9c2b3", "#7d9b86", "#6b9bd1", "#9b7bb8", "#f6a6c6", "#ffffff", "#c7b9a2", "#e8dfd0"];
+  var grid = document.getElementById("grid");
+  var palette = document.getElementById("palette");
+  var cells = [];
+  var current = colors[0];
+  var eraser = false;
+  var history = [];
+
+  function buildPalette() {
+    palette.innerHTML = "";
+    colors.forEach(function (c) {
+      var s = document.createElement("button");
+      s.className = "swatch" + (c === current ? " active" : "");
+      s.style.background = c;
+      s.addEventListener("click", function () {
+        current = c; eraser = false;
+        document.getElementById("eraser").classList.remove("active");
+        renderPaletteActive();
+      });
+      palette.appendChild(s);
+    });
+  }
+  function renderPaletteActive() {
+    [].forEach.call(palette.children, function (s) { s.classList.toggle("active", s.style.background === current); });
+  }
+  function buildGrid() {
+    grid.innerHTML = "";
+    cells = [];
+    for (var i = 0; i < N * N; i++) {
+      var d = document.createElement("div");
+      d.className = "cell2"; d.style.background = "#ffffff";
+      d.addEventListener("pointerdown", function (e) { e.preventDefault(); paint(this); });
+      d.addEventListener("pointerenter", function (e) { if (e.buttons === 1) paint(this); });
+      grid.appendChild(d); cells.push(d);
+    }
+  }
+  function paint(d) {
+    if (eraser && d.style.background === "rgb(255, 255, 255)") return;
+    var before = d.style.background;
+    d.style.background = eraser ? "#ffffff" : current;
+    if (before !== d.style.background) history.push({ el: d, from: before, to: d.style.background });
+  }
+  document.getElementById("eraser").addEventListener("click", function () {
+    eraser = !eraser; this.classList.toggle("active", eraser);
+  });
+  document.getElementById("clear").addEventListener("click", function () {
+    var snap = cells.map(function (d) { return { el: d, from: d.style.background, to: "#ffffff" }; });
+    history = history.concat(snap);
+    cells.forEach(function (d) { d.style.background = "#ffffff"; });
+  });
+  document.getElementById("undo").addEventListener("click", function () {
+    var last = history.pop();
+    if (last) last.el.style.background = last.from;
+  });
+  document.getElementById("save").addEventListener("click", function () {
+    var canvas = document.createElement("canvas");
+    var size = 480; canvas.width = size; canvas.height = size;
+    var ctx = canvas.getContext("2d"); var step = size / N;
+    cells.forEach(function (d, i) {
+      ctx.fillStyle = d.style.background;
+      ctx.fillRect((i % N) * step, Math.floor(i / N) * step, step, step);
+    });
+    var a = document.createElement("a");
+    a.href = canvas.toDataURL("image/png"); a.download = "pixel-art.png";
+    a.click();
+  });
+  buildPalette(); buildGrid();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>打字测速 · 小小崔</title>
+<style>
+  :root {
+    --bg: #faf7f2; --surface: #fff; --ink: #2f2c28; --ink-soft: #6b6258;
+    --muted: #9a9088; --accent: #7d9b86; --accent-2: #c08552; --line: #e7e0d6; --shadow: 0 8px 30px rgba(60,50,40,.1);
+    --good: #7d9b86; --bad: #e05656;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: "Noto Sans SC", system-ui, "PingFang SC", "Microsoft YaHei", sans-serif;
+    -webkit-font-smoothing: antialiased; line-height: 1.7;
+    min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+  }
+  header { width: 100%; max-width: 680px; padding: 18px 20px 0; display: flex; align-items: center; gap: 12px; }
+  .back { color: var(--accent); text-decoration: none; font-size: 14px; font-weight: 500; white-space: nowrap; }
+  .back:hover { text-decoration: underline; }
+  header h1 { font-size: 20px; margin: 0; font-family: "Noto Serif SC", serif; }
+  main { width: 100%; max-width: 680px; padding: 16px 20px 40px; }
+
+  .bar { display: flex; gap: 10px; margin: 8px 0 16px; flex-wrap: wrap; }
+  .stat { flex: 1; min-width: 70px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 8px 10px; text-align: center; box-shadow: var(--shadow); }
+  .stat .lbl { font-size: 11px; color: var(--muted); }
+  .stat b { display: block; font-size: 22px; color: var(--accent-2); font-variant-numeric: tabular-nums; }
+  .bar button { border: none; cursor: pointer; background: var(--accent); color: #fff; font-size: 15px; font-weight: 500; padding: 10px 22px; border-radius: 999px; }
+  .bar button:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+
+  .sample {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
+    padding: 18px; margin-bottom: 16px; font-size: clamp(16px, 4.4vw, 20px);
+    line-height: 1.9; letter-spacing: 1px; min-height: 120px; box-shadow: var(--shadow);
+  }
+  .sample span { border-radius: 3px; }
+  .sample .cur { background: var(--accent-2); color: #fff; }
+  .sample .ok { color: var(--good); }
+  .sample .bad { color: var(--bad); background: #fbe6e6; }
+
+  textarea {
+    width: 100%; min-height: 120px; resize: vertical; padding: 14px 16px;
+    font-size: 16px; font-family: inherit; line-height: 1.8; letter-spacing: 1px;
+    border: 1px solid var(--line); border-radius: 16px; background: var(--surface); color: var(--ink);
+  }
+  textarea:focus { outline: none; border-color: var(--accent); }
+  textarea:disabled { background: #f2eee7; }
+
+  .result { text-align: center; padding: 24px 12px; }
+  .result h2 { font-family: "Noto Serif SC", serif; font-size: 26px; margin: 0 0 6px; }
+  .result .nums { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+  .result .nums div { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 12px 22px; box-shadow: var(--shadow); }
+  .result .nums b { display: block; font-size: 24px; color: var(--accent-2); font-variant-numeric: tabular-nums; }
+  .result .nums span { font-size: 12px; color: var(--muted); }
+  .hint { text-align: center; color: var(--muted); font-size: 13px; margin-top: 16px; }
+</style>
+</head>
+<body>
+  <header>
+    <a class="back" href="../works.html">← 返回作品集</a>
+    <h1>打字测速</h1>
+  </header>
+  <main>
+    <div class="bar">
+      <div class="stat"><span class="lbl">时间</span><b id="time">60</b></div>
+      <div class="stat"><span class="lbl">速度(字/分)</span><b id="wpm">0</b></div>
+      <div class="stat"><span class="lbl">正确率</span><b id="acc">100%</b></div>
+      <button id="btn">开始</button>
+    </div>
+    <div class="sample" id="sample"></div>
+    <textarea id="ta" placeholder="点「开始」后，照着上面的文字打字…" disabled></textarea>
+    <p class="hint">先点「开始」，再照着上方文字输入；倒计时结束后给出成绩</p>
+  </main>
+<script>
+(function () {
+  var TEXTS = [
+    "人的一生会经历很多事，但真正值得记住的，往往是那些安静的努力。",
+    "代码是把想法变成现实的方式，每一行都藏着解决问题的耐心。",
+    "慢慢来，比较快。坚持做一件小事，时间会给出答案。",
+    "今天的你会感谢昨天没有放弃的自己。",
+    "把复杂的事情拆成小步骤，一件一件做完，目标就不远了。"
+  ];
+  var SECONDS = 60;
+  var sampleEl = document.getElementById("sample");
+  var ta = document.getElementById("ta");
+  var btn = document.getElementById("btn");
+  var timeEl = document.getElementById("time");
+  var wpmEl = document.getElementById("wpm");
+  var accEl = document.getElementById("acc");
+
+  var text = "", typed = "", timer = null, left = SECONDS, started = false, finished = false;
+
+  function pick() {
+    text = TEXTS[Math.floor(Math.random() * TEXTS.length)];
+  }
+
+  function renderSample() {
+    var html = "";
+    var chars = text.split("");
+    for (var i = 0; i < chars.length; i++) {
+      var c = chars[i];
+      var cls = "";
+      if (i < typed.length) cls = typed[i] === c ? "ok" : "bad";
+      else if (i === typed.length) cls = "cur";
+      html += '<span class="' + cls + '">' + (c === " " ? "&nbsp;" : c) + "</span>";
+    }
+    sampleEl.innerHTML = html;
+  }
+
+  function updateStats() {
+    var correct = 0;
+    for (var i = 0; i < typed.length && i < text.length; i++) if (typed[i] === text[i]) correct++;
+    var minutes = (SECONDS - left) / 60;
+    var wpm = minutes > 0 ? Math.round(correct / minutes) : 0;
+    var acc = typed.length ? Math.round(correct / typed.length * 100) : 100;
+    wpmEl.textContent = wpm;
+    accEl.textContent = acc + "%";
+  }
+
+  function start() {
+    if (started) { reset(); start(); return; }
+    pick(); typed = ""; finished = false; started = true;
+    left = SECONDS; timeEl.textContent = left;
+    ta.value = ""; ta.disabled = false; ta.focus();
+    btn.textContent = "重来";
+    renderSample(); updateStats();
+    clearInterval(timer);
+    timer = setInterval(function () {
+      left--; timeEl.textContent = left;
+      if (left <= 0) finish();
+    }, 1000);
+  }
+
+  function finish() {
+    clearInterval(timer); timer = null;
+    finished = true; started = false;
+    ta.disabled = true;
+    updateStats();
+    var correct = 0;
+    for (var i = 0; i < typed.length && i < text.length; i++) if (typed[i] === text[i]) correct++;
+    var minutes = SECONDS / 60;
+    var wpm = minutes > 0 ? Math.round(correct / minutes) : 0;
+    var acc = typed.length ? Math.round(correct / typed.length * 100) : 100;
+    var msg = "成绩：速度 " + wpm + " 字/分，正确率 " + acc + "%";
+    sampleEl.innerHTML = '<div class="result"><h2>时间到！</h2><p style="color:var(--muted)">' + msg + "</p></div>";
+    wpmEl.textContent = wpm;
+    accEl.textContent = acc + "%";
+  }
+
+  function reset() {
+    clearInterval(timer); timer = null;
+    started = false; finished = false;
+    typed = ""; left = SECONDS;
+    ta.disabled = true; ta.value = "";
+    btn.textContent = "开始";
+    timeEl.textContent = SECONDS;
+    wpmEl.textContent = "0";
+    accEl.textContent = "100%";
+    sampleEl.innerHTML = "";
+  }
+
+  ta.addEventListener("input", function () {
+    if (!started || finished) return;
+    typed = ta.value;
+    renderSample(); updateStats();
+    if (typed.length >= text.length) finish();
+  });
+
+  btn.addEventListener("click", start);
+  reset();
+})();
+</script>
+</body>
+</html>

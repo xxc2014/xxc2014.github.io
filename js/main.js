@@ -98,6 +98,7 @@
   /* 单张作品卡片 */
   function workCard(w, i) {
     var meta = [w.year, w.status].filter(Boolean).join(" · ");
+    var demo = w.demo ? '<a class="pf-demo" href="' + w.demo + '">▶ 在线演示</a>' : "";
     var links = workLinks(w);
     return (
       '<article class="pf-card" data-cat="' + w.cat + '" data-index="' + i + '">' +
@@ -109,8 +110,24 @@
           tagList(w.tags) +
           '<div class="pf-actions">' +
             '<span class="pf-open" data-open="' + i + '">查看详情 →</span>' +
-            (links ? '<span class="pf-links">' + links + "</span>" : "") +
+            demo +
+            (!w.demo && links ? '<span class="pf-links">' + links + "</span>" : "") +
           "</div>" +
+        "</div>" +
+      "</article>"
+    );
+  }
+
+  /* 待完成作品卡片（无演示、无弹窗，弱化显示） */
+  function wipCard(w) {
+    return (
+      '<article class="pf-card wip-card">' +
+        '<div class="pf-thumb">' + (w.icon || "💭") + '<span class="pf-flag">待完成</span></div>' +
+        '<div class="pf-body">' +
+          '<div class="pf-top"><span class="pf-cat">' + w.cat + "</span>" + (w.year ? '<span class="pf-meta">' + w.year + "</span>" : "") + "</div>" +
+          "<h3>" + w.title + "</h3>" +
+          "<p>" + w.desc + "</p>" +
+          tagList(w.tags) +
         "</div>" +
       "</article>"
     );
@@ -122,6 +139,21 @@
     if (!box) return;
     box.className = "pf-grid";
     box.innerHTML = WORKS.map(workCard).join("");
+  }
+
+  /* 待完成作品（works.html「待完成」 + index「正在做」共用） */
+  function renderWip() {
+    var html = WIP.map(wipCard).join("");
+    ["wip-list", "home-wip-list"].forEach(function (id) {
+      var box = document.getElementById(id);
+      if (!box) return;
+      box.className = "pf-grid";
+      box.innerHTML = html;
+    });
+    var wrap = document.getElementById("wip-wrap");
+    var homeWrap = document.getElementById("home-wip-wrap");
+    if (wrap) wrap.hidden = !WIP.length;
+    if (homeWrap) homeWrap.hidden = !WIP.length;
   }
 
   /* ---------- 作品集专属（仅在对应容器存在时生效） ---------- */
@@ -159,6 +191,7 @@
     if (!f) { if (wrap) wrap.hidden = true; return; }
     if (wrap) wrap.hidden = false;
     var links = workLinks(f);
+    var demo = f.demo ? '<a class="pf-demo" href="' + f.demo + '">▶ 在线演示</a>' : "";
     box.innerHTML =
       '<article class="pf-feature">' +
         '<div class="pf-feature-icon">' + (f.icon || "✨") + "</div>" +
@@ -167,7 +200,7 @@
           "<h3>" + f.title + "</h3>" +
           "<p>" + (f.longDesc || f.desc) + "</p>" +
           tagList(f.tags) +
-          (links ? '<div class="pf-actions" style="margin-top:16px;"><span class="pf-links">' + links + "</span></div>" : "") +
+          (demo || links ? '<div class="pf-actions" style="margin-top:16px;">' + demo + (links ? '<span class="pf-links">' + links + "</span>" : "") + "</div>" : "") +
         "</div>" +
       "</article>";
   }
@@ -305,6 +338,7 @@
     renderNav();
     renderFooter();
     renderWorks();
+    renderWip();
     renderStats();
     renderSkills();
     renderFeatured();

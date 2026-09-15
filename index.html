@@ -34,11 +34,23 @@ layout: default
       <div class="section-head">
         <div>
           <h2>最近的作品</h2>
-          <div class="sub">我做的小工具与 App</div>
+          <div class="sub">我做的小工具与 App，点进去就能玩</div>
         </div>
         <a class="more-link" href="{{ '/works.html' | relative_url }}">全部作品 →</a>
       </div>
       <div id="works-list"></div>
+    </section>
+
+    <!-- 正在做 -->
+    <section class="section-sm wrap" id="home-wip-wrap" hidden>
+      <div class="section-head">
+        <div>
+          <h2>正在做</h2>
+          <div class="sub">还在打磨中的项目</div>
+        </div>
+        <a class="more-link" href="{{ '/works.html' | relative_url }}">看看进展 →</a>
+      </div>
+      <div id="home-wip-list"></div>
     </section>
 
     <!-- 信奥 + 自媒体 两栏 -->
