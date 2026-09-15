@@ -11,6 +11,7 @@
     var p = location.pathname.split("/").pop() || "index.html";
     if (p === "" || p === "index.html") return "home";
     if (p.indexOf("works") === 0) return "works";
+    if (p.indexOf("ai") === 0) return "ai";
     if (p.indexOf("oi") === 0) return "oi";
     if (p.indexOf("media") === 0) return "media";
     if (p.indexOf("blog") === 0) return "blog";
@@ -31,6 +32,7 @@
     var links = [
       { p: "home",  t: "首页",   u: "index.html" },
       { p: "works", t: "作品",   u: "works.html" },
+      { p: "ai",    t: "AI",     u: "ai.html" },
       { p: "oi",    t: "信奥",   u: "oi.html" },
       { p: "media", t: "自媒体", u: "media.html" },
       { p: "blog",  t: "博客",   u: "blog.html" }
